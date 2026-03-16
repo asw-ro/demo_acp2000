@@ -736,9 +736,31 @@ table.dt {
     grid-template-columns: 1fr;
   }
 }
+.menu-btn {
+  display: none;
+}
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 90;
+}
 @media (max-width: 768px) {
+  .menu-btn {
+    display: flex;
+    font-size: 18px;
+  }
   .sidebar {
-    display: none;
+    transform: translateX(-100%);
+    transition: transform var(--tr);
+    z-index: 100;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .sidebar-overlay.visible {
+    display: block;
   }
   .main {
     margin-left: 0;

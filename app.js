@@ -54,6 +54,7 @@ function navigate(id) {
   const p = PAGES.find((x) => x.id === id);
   document.getElementById("topbar-title").textContent = p.label;
   document.getElementById("topbar-crumb").textContent = p.crumb || `/ ${p.label}`;
+  closeSidebar();
   buildNav();
   render(id);
 }
@@ -267,6 +268,15 @@ async function rSet(el) {
 
 function rGDPR(el) {
   el.innerHTML = `<div class="detail-header fade-in"><h3>GDPR / Acord</h3><p>Consimțământ și preferințe privind datele personale</p></div><div class="card fade-in" style="margin-bottom:16px"><div class="card-hd"><span class="card-title">Status acord</span><span class="badge badge-green">Activ</span></div><div class="card-body"><div class="kv-grid"><div class="kv-item"><div class="kv-label">Versiune</div><div class="kv-value">v2.1</div></div><div class="kv-item"><div class="kv-label">Data acceptare</div><div class="kv-value">01.01.2026</div></div><div class="kv-item"><div class="kv-label">Termeni și Condiții</div><div class="kv-value" style="color:var(--green)">✓ Acceptat</div></div><div class="kv-item"><div class="kv-label">Politica de Confidențialitate</div><div class="kv-value" style="color:var(--green)">✓ Acceptat</div></div></div></div></div><div class="card fade-in" style="margin-bottom:16px"><div class="card-hd"><span class="card-title">Consimțământ notificări</span></div><div class="card-body"><div class="toggle-row"><div><div class="toggle-label">Facturi emise</div><div class="toggle-desc">La emiterea unei facturi noi</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"></div></div><div class="toggle-row"><div><div class="toggle-label">Confirmare plăți</div><div class="toggle-desc">La confirmarea unei plăți</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"></div></div><div class="toggle-row"><div><div class="toggle-label">Facturi restante</div><div class="toggle-desc">Atenționare facturi neachitate</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"></div></div><div class="toggle-row"><div><div class="toggle-label">Comunicări operator</div><div class="toggle-desc">Anunțuri, lucrări, avarii</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"></div></div><div class="toggle-row"><div><div class="toggle-label">Perioadă autocitire</div><div class="toggle-desc">Reminder transmitere index</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"></div></div><div class="alert alert-blue" style="margin-top:16px">ℹ️ Modificările sunt jurnalizate. Puteți retrage consimțământul oricând.</div></div></div><div class="card fade-in"><div class="card-hd"><span class="card-title">Drepturi GDPR</span></div><div class="card-body"><p style="font-size:13px;color:var(--gray-600);line-height:1.7;margin-bottom:14px">Conform GDPR: dreptul la informare, acces, rectificare, ștergere, restricționare, portabilitate și opoziție.</p><div style="display:flex;gap:10px"><button class="btn btn-o" onclick="alert('Demo: Export date transmis.')">📥 Export date</button><button class="btn btn-o" style="color:var(--red);border-color:var(--red)" onclick="alert('Demo: Solicitare ștergere cont transmisă.')">🗑️ Ștergere cont</button></div></div></div>`;
+}
+
+function toggleSidebar() {
+  document.getElementById("sidebar").classList.toggle("open");
+  document.getElementById("sidebar-overlay").classList.toggle("visible");
+}
+function closeSidebar() {
+  document.getElementById("sidebar").classList.remove("open");
+  document.getElementById("sidebar-overlay").classList.remove("visible");
 }
 
 buildNav();
