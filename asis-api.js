@@ -148,6 +148,26 @@ const AsisAPI = {
     }
   },
 
+  // getAbonatAsocieri — gestionat de portal (BD portal + acp_GetAbonat + acp_GetContracte)
+  async getAbonatAsocieri() {
+    const [abonat, contracte] = await Promise.all([
+      this.getAbonat(),
+      this.getContracte(),
+    ]);
+    return {
+      asocieri: [
+        {
+          codAbonat: abonat.codAbonat,
+          denumire: abonat.denumire,
+          tip: "Primar",
+          dataAsociere: DATA.utilizator.dataCreare,
+          status: "Activa",
+          nrContracte: contracte.contracte.length,
+        },
+      ],
+    };
+  },
+
   // acp_GetPlati
   async getPlati() {
     try {
