@@ -1,3 +1,15 @@
+// Escape HTML pentru valori din API — protecţie XSS în template strings.
+// DOMPurify (încărcat în pagină) se foloseşte pentru câmpuri rich-text
+// (ex: anunt.text cu HTML formatat). Pentru valori plain-text se foloseşte esc().
+function esc(v) {
+  return String(v ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 // Funcţii helper pentru badge-uri nav (citesc DATA direct — sursă de adevăr)
 function stB(s, a) {
   return s === 0
@@ -93,7 +105,7 @@ async function rDash(el) {
     .join("")}</tbody></table></div><div class="card fade-in"><div class="card-hd"><span class="card-title">Autocitire index</span><span class="badge badge-blue">Perioadă activă</span></div><div class="card-body"><div class="info-box"><div class="info-row"><span>Serie contor:</span><strong class="mono">${d.ultimulIndex.serie}</strong></div><div class="info-row"><span>Cod autocitire:</span><strong class="mono">${d.ultimulIndex.codAutocitire}</strong></div><div class="info-row"><span>Ultimul index:</span><strong class="mono">${d.ultimulIndex.index}</strong></div></div><button class="btn btn-p btn-full" onclick="navigate('autocitire')">Transmite autocitire →</button><div class="alert alert-amber">⏰ Perioada de transmitere: 20 – 31 martie 2026</div></div></div></div><div class="grid-2"><div class="card fade-in"><div class="card-hd"><span class="card-title">Notificări</span><span class="card-act" onclick="navigate('notificari')">Vezi toate</span></div>${d.notificariRecente
     .map(
       (n) =>
-        `<div class="notif-item${!n.citit ? " unread" : ""}"><div class="ndot ${n.citit ? "off" : "on"}"></div><div class="notif-text"><strong>${n.titlu}</strong><span>${n.text}</span></div><div class="notif-time">${n.data}</div></div>`,
+        `<div class="notif-item${!n.citit ? " unread" : ""}"><div class="ndot ${n.citit ? "off" : "on"}"></div><div class="notif-text"><strong>${esc(n.titlu)}</strong><span>${esc(n.text)}</span></div><div class="notif-time">${esc(n.data)}</div></div>`,
     )
     .join("")}</div><div class="card fade-in"><div class="card-hd"><span class="card-title">Sesizările mele</span><span class="card-act" onclick="navigate('sesizari')">+ Sesizare nouă</span></div><table class="dt"><thead><tr><th>Nr.</th><th>Data</th><th>Tip</th><th>Status</th></tr></thead><tbody>${d.sesizariRecente
     .map(
@@ -110,7 +122,7 @@ async function rCont(el) {
     AsisAPI.getAbonatAsocieri(),
   ]);
   const as = asocieri.asocieri[0];
-  el.innerHTML = `<div class="detail-header fade-in"><h3>Cont client</h3><p>Informații despre contul dvs. online și datele de identificare</p></div><div class="grid-2"><div class="card fade-in"><div class="card-hd"><span class="card-title">Date utilizator online</span><span class="badge badge-green">${profil.status}</span></div><div class="card-body"><div class="kv-grid"><div class="kv-item"><div class="kv-label">Email</div><div class="kv-value">${profil.email}</div></div><div class="kv-item"><div class="kv-label">Telefon</div><div class="kv-value">${profil.telefon}</div></div><div class="kv-item"><div class="kv-label">Data creare cont</div><div class="kv-value">${profil.dataCreare}</div></div><div class="kv-item"><div class="kv-label">2FA</div><div class="kv-value">${profil.twoFA ? "Activă (Email)" : "Inactivă"}</div></div><div class="kv-item"><div class="kv-label">Factură electronică</div><div class="kv-value">${profil.facturaElectronica ? "DA — doar electronic" : "NU — tipărit"}</div></div><div class="kv-item"><div class="kv-label">Acord GDPR</div><div class="kv-value">${profil.acordGDPR.versiune} — acceptat ${profil.acordGDPR.dataAcceptare}</div></div></div></div></div><div class="card fade-in"><div class="card-hd"><span class="card-title">Date abonat (ERP)</span><span class="mono" style="font-size:11px;color:var(--gray-400)">COD ${abonat.codAbonat}</span></div><div class="card-body"><div class="kv-grid"><div class="kv-item"><div class="kv-label">Denumire</div><div class="kv-value">${abonat.denumire}</div></div><div class="kv-item"><div class="kv-label">Categorie</div><div class="kv-value">${abonat.categorie}</div></div><div class="kv-item" style="grid-column:span 2"><div class="kv-label">Adresă corespondență</div><div class="kv-value">${abonat.adresaCorespondenta}</div></div></div><div class="alert alert-blue">ℹ️ Datele de abonat sunt preluate din ASiS ERP. Pentru modificări, depuneți o cerere.</div></div></div></div><div class="card fade-in"><div class="card-hd"><span class="card-title">Coduri abonat asociate</span><span class="card-act" onclick="alert('Demo: Asociere cod abonat suplimentar')">+ Adaugă cod abonat</span></div><table class="dt"><thead><tr><th>Cod</th><th>Denumire</th><th>Tip</th><th>Data</th><th>Contracte</th></tr></thead><tbody><tr><td class="mono fw">${as.codAbonat}</td><td>${as.denumire}</td><td><span class="badge badge-blue">${as.tip}</span></td><td>${as.dataAsociere}</td><td>${as.nrContracte}</td></tr></tbody></table></div>`;
+  el.innerHTML = `<div class="detail-header fade-in"><h3>Cont client</h3><p>Informații despre contul dvs. online și datele de identificare</p></div><div class="grid-2"><div class="card fade-in"><div class="card-hd"><span class="card-title">Date utilizator online</span><span class="badge badge-green">${profil.status}</span></div><div class="card-body"><div class="kv-grid"><div class="kv-item"><div class="kv-label">Email</div><div class="kv-value">${profil.email}</div></div><div class="kv-item"><div class="kv-label">Telefon</div><div class="kv-value">${profil.telefon}</div></div><div class="kv-item"><div class="kv-label">Data creare cont</div><div class="kv-value">${profil.dataCreare}</div></div><div class="kv-item"><div class="kv-label">2FA</div><div class="kv-value">${profil.twoFA ? "Activă (Email)" : "Inactivă"}</div></div><div class="kv-item"><div class="kv-label">Factură electronică</div><div class="kv-value">${profil.facturaElectronica ? "DA — doar electronic" : "NU — tipărit"}</div></div><div class="kv-item"><div class="kv-label">Acord GDPR</div><div class="kv-value">${profil.acordGDPR.versiune} — acceptat ${profil.acordGDPR.dataAcceptare}</div></div></div></div></div><div class="card fade-in"><div class="card-hd"><span class="card-title">Date abonat (ERP)</span><span class="mono" style="font-size:11px;color:var(--gray-400)">COD ${abonat.codAbonat}</span></div><div class="card-body"><div class="kv-grid"><div class="kv-item"><div class="kv-label">Denumire</div><div class="kv-value">${abonat.denumire}</div></div><div class="kv-item"><div class="kv-label">Categorie</div><div class="kv-value">${abonat.categorie}</div></div><div class="kv-item kv-full"><div class="kv-label">Adresă corespondență</div><div class="kv-value">${abonat.adresaCorespondenta}</div></div></div><div class="alert alert-blue">ℹ️ Datele de abonat sunt preluate din ASiS ERP. Pentru modificări, depuneți o cerere.</div></div></div></div><div class="card fade-in"><div class="card-hd"><span class="card-title">Coduri abonat asociate</span><span class="card-act" onclick="alert('Demo: Asociere cod abonat suplimentar')">+ Adaugă cod abonat</span></div><table class="dt"><thead><tr><th>Cod</th><th>Denumire</th><th>Tip</th><th>Data</th><th>Contracte</th></tr></thead><tbody><tr><td class="mono fw">${as.codAbonat}</td><td>${as.denumire}</td><td><span class="badge badge-blue">${as.tip}</span></td><td>${as.dataAsociere}</td><td>${as.nrContracte}</td></tr></tbody></table></div>`;
 }
 
 async function rContr(el) {
@@ -118,7 +130,7 @@ async function rContr(el) {
   el.innerHTML = `<div class="detail-header fade-in"><h3>Contracte și locuri de consum</h3><p>Contractele active asociate codului dvs. de abonat</p></div>${result.contracte
     .map(
       (c) =>
-        `<div class="card fade-in" style="margin-bottom:16px"><div class="card-hd"><span class="card-title">Contract ${c.id}</span><span class="badge badge-green">${c.status}</span></div><div class="card-body"><div class="kv-grid"><div class="kv-item"><div class="kv-label">Cod abonat</div><div class="kv-value mono">${c.codAbonat}</div></div><div class="kv-item"><div class="kv-label">Data început</div><div class="kv-value">${c.dataInceput}</div></div><div class="kv-item" style="grid-column:span 2"><div class="kv-label">Servicii</div><div class="kv-value">${c.servicii}</div></div></div><strong style="font-size:12px;color:var(--navy)">Locuri de consum</strong>${c.locuriConsum
+        `<div class="card fade-in" style="margin-bottom:16px"><div class="card-hd"><span class="card-title">Contract ${c.id}</span><span class="badge badge-green">${c.status}</span></div><div class="card-body"><div class="kv-grid"><div class="kv-item"><div class="kv-label">Cod abonat</div><div class="kv-value mono">${c.codAbonat}</div></div><div class="kv-item"><div class="kv-label">Data început</div><div class="kv-value">${c.dataInceput}</div></div><div class="kv-item kv-full"><div class="kv-label">Servicii</div><div class="kv-value">${c.servicii}</div></div></div><strong style="font-size:12px;color:var(--navy)">Locuri de consum</strong>${c.locuriConsum
           .map(
             (lc) =>
               `<div class="info-box" style="margin-top:10px"><div class="info-row"><span>ID:</span><strong class="mono">${lc.id}</strong></div><div class="info-row"><span>Adresă:</span><strong>${lc.adresa}</strong></div><div class="info-row"><span>Status:</span><strong>${lc.status}</strong></div>${lc.contoare
@@ -221,7 +233,7 @@ async function rSes(el) {
   el.innerHTML = `<div class="detail-header fade-in"><h3>Sesizări și solicitări</h3><p>Depuneți și urmăriți sesizările dvs.</p></div><div class="grid-2"><div class="card fade-in"><div class="card-hd"><span class="card-title">Sesizări depuse</span></div><table class="dt"><thead><tr><th>Nr.</th><th>Data</th><th>Tip</th><th>Descriere</th><th>Status</th></tr></thead><tbody>${sesizariResult.sesizari
     .map(
       (s) =>
-        `<tr><td class="mono fw">${s.nr}</td><td>${s.data}</td><td>${s.tip}</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${s.descriere}">${s.descriere}</td><td>${seB(s.status)}</td></tr>`,
+        `<tr><td class="mono fw">${esc(s.nr)}</td><td>${esc(s.data)}</td><td>${esc(s.tip)}</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(s.descriere)}">${esc(s.descriere)}</td><td>${seB(s.status)}</td></tr>`,
     )
     .join("")}</tbody></table></div><div class="card fade-in"><div class="card-hd"><span class="card-title">Sesizare nouă</span></div><div class="card-body"><div class="form-group"><label>Loc consum</label><select>${locuriConsum
     .map((lc) => `<option>${lc.adresa.split(",")[0]}</option>`)
@@ -235,7 +247,7 @@ async function rNotif(el) {
   el.innerHTML = `<div class="detail-header fade-in"><h3>Notificări</h3><p>Toate notificările primite</p></div><div class="card fade-in"><div class="card-hd"><span class="card-title">Notificări (${result.notificari.length})</span><span class="card-act" onclick="mAll()">Marchează toate citite</span></div>${result.notificari
     .map(
       (n) =>
-        `<div class="notif-item${!n.citit ? " unread" : ""}" onclick="mR(${n.id})"><div class="ndot ${n.citit ? "off" : "on"}"></div><div class="notif-text"><strong>${n.titlu}</strong><span>${n.text}</span></div><div class="notif-time">${n.data}</div></div>`,
+        `<div class="notif-item${!n.citit ? " unread" : ""}" onclick="mR(${n.id})"><div class="ndot ${n.citit ? "off" : "on"}"></div><div class="notif-text"><strong>${esc(n.titlu)}</strong><span>${esc(n.text)}</span></div><div class="notif-time">${esc(n.data)}</div></div>`,
     )
     .join("")}</div>`;
 }
@@ -255,7 +267,7 @@ async function rAnunt(el) {
   el.innerHTML = `<div class="detail-header fade-in"><h3>Anunțuri</h3><p>Comunicări de la Apa Canal 2000 SA</p></div>${result.anunturi
     .map(
       (a) =>
-        `<div class="card fade-in" style="margin-bottom:14px"><div class="card-hd"><span class="card-title">${a.titlu}</span><span class="badge badge-blue">${a.tip}</span></div><div class="card-body"><p style="font-size:13px;color:var(--gray-600);line-height:1.6;margin-bottom:8px">${a.text}</p><span style="font-size:11px;color:var(--gray-400)">Publicat: ${a.data}</span></div></div>`,
+        `<div class="card fade-in" style="margin-bottom:14px"><div class="card-hd"><span class="card-title">${esc(a.titlu)}</span><span class="badge badge-blue">${esc(a.tip)}</span></div><div class="card-body"><p style="font-size:13px;color:var(--gray-600);line-height:1.6;margin-bottom:8px">${DOMPurify.sanitize(a.text)}</p><span style="font-size:11px;color:var(--gray-400)">Publicat: ${esc(a.data)}</span></div></div>`,
     )
     .join("")}`;
 }
