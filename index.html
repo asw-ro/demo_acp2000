@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portal Abonați — Apa Canal 2000 SA Pitești</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <h1>Apa Canal 2000 SA<span>Portal Abonați</span></h1>
+      </div>
+      <div class="wave-div"></div>
+      <nav class="sidebar-nav" id="sidebar-nav"></nav>
+      <div class="sidebar-footer">
+        <div class="user-avatar">IA</div>
+        <div>
+          <div class="user-name">Ivașcu Gh. Adrian</div>
+          <div class="user-code">COD 036720</div>
+        </div>
+      </div>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <div class="topbar-title" id="topbar-title">Panou principal</div>
+        <span class="topbar-crumb" id="topbar-crumb">/ Dashboard</span>
+        <div class="topbar-spacer"></div>
+        <button class="topbar-btn" onclick="navigate('notificari')">
+          🔔<span class="notif-dot"></span></button
+        ><button class="topbar-btn" title="Ajutor">❓</button>
+      </header>
+      <div class="content" id="page-content"></div>
+      <footer class="page-footer">
+        <span>© 2026 Apa Canal 2000 SA Pitești — Portal Abonați v1.0</span
+        ><span
+          ><a href="#">Termeni și condiții</a> · <a href="#">Politica GDPR</a> ·
+          <a href="#">Contact: 0248 223 237</a></span
+        >
+      </footer>
+    </div>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
