@@ -1,6 +1,6 @@
 # Portal Abonați — Demo / PoC
 
-Prototip interactiv pentru un portal de abonați destinat unei companii de utilități (apă și canalizare) — **Apa Canal 2000 SA Pitești**.
+Prototip interactiv pentru un portal de abonați destinat unei companii de utilități (apă și canalizare) 
 
 ![Demo](https://i.ibb.co/FbzQ8PHJ/demo-desktop-dashboard.jpg)
 
