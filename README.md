@@ -45,22 +45,39 @@ Toate datele vin din **ASiS ERP** prin ASiS Service:
 Browser → Portal API → asis-api.js → ASiS Service → ASiS ERP
 ```
 
-**Base URL:** `https://dev.asw.ro/ria/asisservice/linkuri/ext/{metoda}/DEV/`
-
-| Metodă ASiS | Date returnate |
-|-------------|----------------|
-| `acp_GetAbonat` | Date abonat (denumire, adresă, categorie) |
-| `acp_GetContracte` | Contracte, locuri de consum, contoare |
-| `acp_GetFacturi` | Facturi emise + sumar sold |
-| `acp_GetPlati` | Istoric plăți |
-| `acp_GetAutocitiri` | Indici citire per contor |
-| `acp_GetSesizari` | Sesizări și cereri |
-| `acp_GetNotificari` | Notificări portal |
-| `acp_GetAnunturi` | Anunțuri operator |
+**Pattern URL:** `GET https://dev.asw.ro/ria/asisservice/linkuri/ext/{metoda}/{DB}/?{params}`
 
 Când serverul ASiS nu este accesibil (demo local), `asis-api.js` cade automat pe datele din `data.js`.
 
 Autentificarea `x-asis-auth` nu este implementată în această versiune.
+
+### Apeluri GET către ASiS Service
+
+| Metodă ASiS | Parametri trimiși | Date returnate |
+|-------------|-------------------|----------------|
+| `acp_GetAbonat` | `codAbonat` | Denumire, adresă corespondență, categorie, status abonat |
+| `acp_GetContracte` | `codAbonat` | Lista contracte cu locuri de consum și contoare |
+| `acp_GetFacturi` | `codAbonat`, `contract` *(opțional)*, `status` *(opțional: `neachitata` / `partial` / `achitata`)* | Lista facturi + sumar sold total / nr. neachitate / nr. achitate |
+| `acp_GetPlati` | `codAbonat` | Istoric plăți (factură, dată, sumă, metodă, status) |
+| `acp_GetAutocitiri` | `contorId`, `ultimeleLuni` *(implicit 12)* | Serie contor, cod autocitire, ultimul index, istoric indici |
+| `acp_GetSesizari` | `codAbonat`, `status` *(opțional)* | Lista sesizări / cereri cu adresă loc de consum |
+| `acp_GetNotificari` | `codAbonat`, `limita` *(opțional)* | Lista notificări + sumar (total / necitite) |
+| `acp_GetAnunturi` | `limita` *(opțional)* | Lista anunțuri operator (titlu, tip, text, dată) |
+
+### Metode agregate (fără apel direct — combinate în portal)
+
+| Metodă portal | Apeluri interne | Scop |
+|---------------|-----------------|------|
+| `getDashboard()` | `acp_GetFacturi` + `acp_GetAutocitiri` + `acp_GetSesizari` + `acp_GetNotificari` | Date sumar pagină principală |
+| `getAbonatAsocieri()` | `acp_GetAbonat` + `acp_GetContracte` | Asocieri cont utilizator |
+| `getUtilizatorProfil()` | — (date portal local) | Profil, preferințe notificări, GDPR |
+
+### Operații de scriere (dummy — nu sunt încă mapate pe ASiS Service)
+
+| Metodă portal | Operație |
+|---------------|----------|
+| `patchNotificariCitit(id)` | Marchează o notificare ca citită |
+| `patchNotificariCititToate()` | Marchează toate notificările ca citite |
 
 ## Stack
 
